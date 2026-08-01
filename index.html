@@ -322,8 +322,8 @@
             { emoji: '🐰', name: 'Bunny', stars: 50 },
             { emoji: '🐉', name: 'Dragon', stars: 125 },
             { emoji: '🏰', name: 'Castle', stars: 250 },
-            { emoji: '🪐', name: 'Planet', stars: 500 },
             { emoji: '🦛', name: 'Baby Hippo', stars: 1000 },
+            { emoji: '🪐', name: 'Planet', stars: 500 },
             { emoji: '🐵', name: 'Monkey', stars: 2000 }
         ];
 
@@ -418,97 +418,3 @@
 
         function getRewardsDisplay() {
             let remaining = totalStars;
-            const rewards = [];
-            
-            for (let i = REWARD_LEVELS.length - 1; i >= 0; i--) {
-                const count = Math.floor(remaining / REWARD_LEVELS[i].stars);
-                if (count > 0) {
-                    for (let j = 0; j < count; j++) {
-                        rewards.push(REWARD_LEVELS[i].emoji);
-                    }
-                    remaining -= count * REWARD_LEVELS[i].stars;
-                }
-            }
-
-            if (remaining > 0) {
-                rewards.push('⭐' + remaining);
-            }
-
-            return rewards.length > 0 ? rewards.join(' ') : 'No rewards yet!';
-        }
-
-        function getNextRewardInfo() {
-            for (let i = 0; i < REWARD_LEVELS.length; i++) {
-                if (totalStars < REWARD_LEVELS[i].stars) {
-                    const needed = REWARD_LEVELS[i].stars - totalStars;
-                    return {
-                        emoji: REWARD_LEVELS[i].emoji,
-                        name: REWARD_LEVELS[i].name,
-                        needed: needed,
-                        total: REWARD_LEVELS[i].stars,
-                        progress: totalStars
-                    };
-                }
-            }
-            return null;
-        }
-
-        function render() {
-            document.getElementById('rewardsEarned').textContent = getRewardsDisplay();
-
-            const progressSection = document.getElementById('progressSection');
-            const nextReward = getNextRewardInfo();
-            if (nextReward) {
-                const progressPercent = (nextReward.progress / nextReward.total) * 100;
-                progressSection.innerHTML = '<div class="progress-label"><span>Next: ' + nextReward.emoji + ' ' + nextReward.name + '</span><span>' + nextReward.needed + ' more</span></div><div class="progress-bar"><div class="progress-fill" style="width: ' + progressPercent + '%"></div></div>';
-            } else {
-                progressSection.innerHTML = '';
-            }
-
-            const taskList = document.getElementById('taskList');
-            if (tasks.length === 0) {
-                taskList.innerHTML = '<div class="empty-state"><p>✨ No tasks yet!</p><p>Add one above to get started.</p></div>';
-                return;
-            }
-
-            taskList.innerHTML = tasks.map((task, idx) => {
-                return '<div class="task-item ' + (draggedIndex === idx ? 'dragging' : '') + ' ' + (task.completed ? 'completed' : '') + '" draggable="true" ondragstart="dragStart(' + idx + ')" ondragover="dragOver(event)" ondrop="drop(' + idx + ')" ondragend="dragEnd()"><input type="checkbox" ' + (task.completed ? 'checked' : '') + ' onchange="completeTask(' + task.id + ')"><div class="task-content"><div class="task-title">' + task.title + '</div><div class="task-level">' + REWARD_LEVELS[task.level].emoji + ' ' + REWARD_LEVELS[task.level].name + ' (' + REWARD_LEVELS[task.level].stars + ' ⭐)</div></div><div class="task-controls"><button class="delete-btn" onclick="deleteTask(' + task.id + ')">Delete</button></div></div>';
-            }).join('');
-        }
-
-        function dragStart(idx) {
-            draggedIndex = idx;
-        }
-
-        function dragOver(e) {
-            e.preventDefault();
-        }
-
-        function drop(idx) {
-            if (draggedIndex !== null && draggedIndex !== idx) {
-                const draggedTask = tasks[draggedIndex];
-                tasks.splice(draggedIndex, 1);
-                tasks.splice(idx, 0, draggedTask);
-                saveTasks();
-            }
-            draggedIndex = null;
-            render();
-        }
-
-        function dragEnd() {
-            draggedIndex = null;
-            render();
-        }
-
-        document.getElementById('taskInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                addTask();
-            }
-        });
-
-        initializeLevelSelect();
-        initializeRewardKey();
-        render();
-    </script>
-</body>
-</html>
