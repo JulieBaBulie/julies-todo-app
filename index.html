@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Julie's Special Program for Doing Shit</title>
+    <title>Get'n Shit Done</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -292,7 +292,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Julie's Special Program for Doing Shit</h1>
+            <h1>Get'n Shit Done</h1>
             <div class="reward-key" id="rewardKey"></div>
         </div>
 
@@ -363,7 +363,7 @@
             const select = document.getElementById('levelSelect');
             
             if (input.value.trim()) {
-                tasks.push({
+                tasks.unshift({
                     id: Date.now(),
                     title: input.value.trim(),
                     level: parseInt(select.value),
