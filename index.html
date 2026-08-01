@@ -1,1 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Julie's Special Program for Doing Shit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f0ebf8 0%, #e8dff5 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(83, 74, 183, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: #e6d9f0;
+            color: #533a7f;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 900;
+            letter-spacing: 0px;
+            color: #533a7f;
+            text-shadow: 
+                2px 2px 0 rgba(83, 58, 127, 0.2),
+                4px 4px 0 rgba(83, 58, 127, 0.1);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .reward-key {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 20px 0 0 0;
+            padding: 15px;
+            background: rgba(83, 58, 127, 0.1);
+            border-radius: 8px;
+            font-size: 13px;
+            color: #533a7f;
+        }
+        .reward-key-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .rewards-display {
+            padding: 20px;
+            background: #f9f7fc;
+            border-bottom: 1px solid #e8dff5;
+        }
+        .rewards-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .rewards-earned {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+            min-height: 30px;
+        }
+        .progress-section {
+            padding: 20px;
+            background: white;
+            border-bottom: 1px solid #e8dff5;
+        }
+        .progress-label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e8dff5;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8366d9, #6b5fb3);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .input-section {
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            background: white;
+            border-bottom: 1px solid #e8dff5;
+            flex-wrap: wrap;
+        }
+        input[type="text"] {
+            flex: 1;
+            min-width: 150px;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #6b5fb3;
+            box-shadow: 0 0 0 3px rgba(107, 95, 179, 0.1);
+        }
+        select {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            background: white;
+        }
+        select:focus {
+            outline: none;
+            border-color: #6b5fb3;
+            box-shadow: 0 0 0 3px rgba(107, 95, 179, 0.1);
+        }
+        button {
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #6b5fb3 0%, #534ab7 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        button:hover {
+            box-shadow: 0 4px 12px rgba(83, 74, 183, 0.3);
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .task-list {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f9f7fc;
+            border: 1px solid #e8dff5;
+            border-radius: 8px;
+            cursor: grab;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .task-item:hover {
+            background: #f3eff9;
+            box-shadow: 0 2px 8px rgba(83, 74, 183, 0.08);
+        }
+        .task-item.dragging {
+            opacity: 0.5;
+            background: #e8dff5;
+        }
+        .task-item.completed {
+            opacity: 0.6;
+            background: #f0f0f0;
+        }
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #6b5fb3;
+            flex-shrink: 0;
+        }
+        .task-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+        .task-title {
+            font-size: 14px;
+            color: #333;
+            word-break: break-word;
+        }
+        .task-item.completed .task-title {
+            text-decoration: line-through;
+            color: #999;
+        }
+        .task-level {
+            font-size: 12px;
+            color: #888;
+        }
+        .task-controls {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .task-controls button {
+            padding: 6px 10px;
+            font-size: 12px;
+            background: #e8dff5;
+            color: #534ab7;
+            border: none;
+        }
+        .task-controls button:hover {
+            background: #dccfe8;
+        }
+        .task-controls .delete-btn {
+            background: #fce8e8;
+            color: #c23e3e;
+        }
+        .task-controls .delete-btn:hover {
+            background: #f5d5d5;
+        }
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            animation: celebrateIn 0.4s ease-out;
+        }
+        @keyframes celebrateIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        .celebration.exit {
+            animation: celebrateOut 0.4s ease-in forwards;
+        }
+        @keyframes celebrateOut {
+            to {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+        }
+        .celebration h2 {
+            font-size: 28px;
+            margin: 10px 0;
+            color: #534ab7;
+        }
+        .celebration-emoji {
+            font-size: 60px;
+            margin: 20px 0;
+            animation: bounce 0.6s ease-in-out;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+        }
+        .empty-state p {
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Julie's Special Program for Doing Shit</h1>
+            <div class="reward-key" id="rewardKey"></div>
+        </div>
 
+        <div class="rewards-display">
+            <div class="rewards-label">Your Earned Rewards</div>
+            <div class="rewards-earned" id="rewardsEarned">No rewards yet!</div>
+        </div>
+
+        <div class="progress-section" id="progressSection"></div>
+
+        <div class="input-section">
+            <input type="text" id="taskInput" placeholder="What needs doing?" />
+            <select id="levelSelect"></select>
+            <button onclick="addTask()">Add</button>
+        </div>
+
+        <div class="task-list" id="taskList"></div>
+        <div id="celebration"></div>
+    </div>
+
+    <script>
+        const REWARD_LEVELS = [
+            { emoji: '⭐', name: 'Star', stars: 1 },
+            { emoji: '🌸', name: 'Flower', stars: 10 },
+            { emoji: '🐢', name: 'Turtle', stars: 25 },
+            { emoji: '🐰', name: 'Bunny', stars: 50 },
+            { emoji: '🐉', name: 'Dragon', stars: 125 },
+            { emoji: '🏰', name: 'Castle', stars: 250 },
+            { emoji: '🪐', name: 'Planet', stars: 500 },
+            { emoji: '🦛', name: 'Baby Hippo', stars: 1000 },
+            { emoji: '🐵', name: 'Monkey', stars: 2000 }
+        ];
+
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let totalStars = parseInt(localStorage.getItem('totalStars')) || 0;
+        let draggedIndex = null;
+
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function saveStars() {
+            localStorage.setItem('totalStars', totalStars.toString());
+        }
+
+        function initializeLevelSelect() {
+            const select = document.getElementById('levelSelect');
+            REWARD_LEVELS.forEach((level, idx) => {
+                const option = document.createElement('option');
+                option.value = idx;
+                option.textContent = level.emoji + ' ' + level.name;
+                select.appendChild(option);
+            });
+        }
+
+        function initializeRewardKey() {
+            const key = document.getElementById('rewardKey');
+            REWARD_LEVELS.forEach(level => {
+                const item = document.createElement('div');
+                item.className = 'reward-key-item';
+                item.textContent = level.emoji + ' ' + level.stars;
+                key.appendChild(item);
+            });
+        }
+
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const select = document.getElementById('levelSelect');
+            
+            if (input.value.trim()) {
+                tasks.push({
+                    id: Date.now(),
+                    title: input.value.trim(),
+                    level: parseInt(select.value),
+                    completed: false
+                });
+                input.value = '';
+                select.value = 0;
+                saveTasks();
+                render();
+                input.focus();
+            }
+        }
+
+        function completeTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (!task.completed) {
+                const stars = REWARD_LEVELS[task.level].stars;
+                const oldTotal = totalStars;
+                totalStars += stars;
+                saveStars();
+                checkForNewRewards(oldTotal, totalStars);
+            }
+            task.completed = !task.completed;
+            saveTasks();
+            render();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveTasks();
+            render();
+        }
+
+        function checkForNewRewards(oldTotal, newTotal) {
+            for (let i = REWARD_LEVELS.length - 1; i >= 0; i--) {
+                const threshold = REWARD_LEVELS[i].stars;
+                if (oldTotal < threshold && newTotal >= threshold) {
+                    showCelebration(REWARD_LEVELS[i]);
+                    break;
+                }
+            }
+        }
+
+        function showCelebration(level) {
+            const celebDiv = document.getElementById('celebration');
+            celebDiv.innerHTML = '<div class="celebration"><div class="celebration-emoji">' + level.emoji + '</div><h2>You unlocked ' + level.name + '!</h2><p>' + level.stars + ' ⭐ earned!</p></div>';
+            setTimeout(() => {
+                celebDiv.innerHTML = '';
+            }, 2000);
+        }
+
+        function getRewardsDisplay() {
+            let remaining = totalStars;
+            const rewards = [];
+            
+            for (let i = REWARD_LEVELS.length - 1; i >= 0; i--) {
+                const count = Math.floor(remaining / REWARD_LEVELS[i].stars);
+                if (count > 0) {
+                    for (let j = 0; j < count; j++) {
+                        rewards.push(REWARD_LEVELS[i].emoji);
+                    }
+                    remaining -= count * REWARD_LEVELS[i].stars;
+                }
+            }
+
+            if (remaining > 0) {
+                rewards.push('⭐' + remaining);
+            }
+
+            return rewards.length > 0 ? rewards.join(' ') : 'No rewards yet!';
+        }
+
+        function getNextRewardInfo() {
+            for (let i = 0; i < REWARD_LEVELS.length; i++) {
+                if (totalStars < REWARD_LEVELS[i].stars) {
+                    const needed = REWARD_LEVELS[i].stars - totalStars;
+                    return {
+                        emoji: REWARD_LEVELS[i].emoji,
+                        name: REWARD_LEVELS[i].name,
+                        needed: needed,
+                        total: REWARD_LEVELS[i].stars,
+                        progress: totalStars
+                    };
+                }
+            }
+            return null;
+        }
+
+        function render() {
+            document.getElementById('rewardsEarned').textContent = getRewardsDisplay();
+
+            const progressSection = document.getElementById('progressSection');
+            const nextReward = getNextRewardInfo();
+            if (nextReward) {
+                const progressPercent = (nextReward.progress / nextReward.total) * 100;
+                progressSection.innerHTML = '<div class="progress-label"><span>Next: ' + nextReward.emoji + ' ' + nextReward.name + '</span><span>' + nextReward.needed + ' more</span></div><div class="progress-bar"><div class="progress-fill" style="width: ' + progressPercent + '%"></div></div>';
+            } else {
+                progressSection.innerHTML = '';
+            }
+
+            const taskList = document.getElementById('taskList');
+            if (tasks.length === 0) {
+                taskList.innerHTML = '<div class="empty-state"><p>✨ No tasks yet!</p><p>Add one above to get started.</p></div>';
+                return;
+            }
+
+            taskList.innerHTML = tasks.map((task, idx) => {
+                return '<div class="task-item ' + (draggedIndex === idx ? 'dragging' : '') + ' ' + (task.completed ? 'completed' : '') + '" draggable="true" ondragstart="dragStart(' + idx + ')" ondragover="dragOver(event)" ondrop="drop(' + idx + ')" ondragend="dragEnd()"><input type="checkbox" ' + (task.completed ? 'checked' : '') + ' onchange="completeTask(' + task.id + ')"><div class="task-content"><div class="task-title">' + task.title + '</div><div class="task-level">' + REWARD_LEVELS[task.level].emoji + ' ' + REWARD_LEVELS[task.level].name + ' (' + REWARD_LEVELS[task.level].stars + ' ⭐)</div></div><div class="task-controls"><button class="delete-btn" onclick="deleteTask(' + task.id + ')">Delete</button></div></div>';
+            }).join('');
+        }
+
+        function dragStart(idx) {
+            draggedIndex = idx;
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function drop(idx) {
+            if (draggedIndex !== null && draggedIndex !== idx) {
+                const draggedTask = tasks[draggedIndex];
+                tasks.splice(draggedIndex, 1);
+                tasks.splice(idx, 0, draggedTask);
+                saveTasks();
+            }
+            draggedIndex = null;
+            render();
+        }
+
+        function dragEnd() {
+            draggedIndex = null;
+            render();
+        }
+
+        document.getElementById('taskInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addTask();
+            }
+        });
+
+        initializeLevelSelect();
+        initializeRewardKey();
+        render();
+    </script>
+</body>
+</html>
