@@ -1,513 +1,583 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get'n Shit Done</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #f0ebf8 0%, #e8dff5 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(83, 74, 183, 0.1);
-            overflow: hidden;
-        }
-        .header {
-            background: #e6d9f0;
-            color: #533a7f;
-            padding: 30px 20px;
-            text-align: center;
-        }
-        .header h1 {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 18px;
-            margin-bottom: 10px;
-            font-weight: 900;
-            letter-spacing: 0px;
-            color: #533a7f;
-            text-shadow: 
-                2px 2px 0 rgba(83, 58, 127, 0.2),
-                4px 4px 0 rgba(83, 58, 127, 0.1);
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-        }
-        .reward-key {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin: 20px 0 0 0;
-            padding: 15px;
-            background: rgba(83, 58, 127, 0.1);
-            border-radius: 8px;
-            font-size: 13px;
-            color: #533a7f;
-        }
-        .reward-key-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .rewards-display {
-            padding: 20px;
-            background: #f9f7fc;
-            border-bottom: 1px solid #e8dff5;
-        }
-        .rewards-label {
-            font-size: 12px;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        .rewards-earned {
-            font-size: 18px;
-            line-height: 1.6;
-            color: #333;
-            min-height: 30px;
-        }
-        .progress-section {
-            padding: 20px;
-            background: white;
-            border-bottom: 1px solid #e8dff5;
-        }
-        .progress-label {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e8dff5;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #8366d9, #6b5fb3);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-        .input-section {
-            padding: 20px;
-            display: flex;
-            gap: 10px;
-            background: white;
-            border-bottom: 1px solid #e8dff5;
-            flex-wrap: wrap;
-        }
-        input[type="text"] {
-            flex: 1;
-            min-width: 150px;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #6b5fb3;
-            box-shadow: 0 0 0 3px rgba(107, 95, 179, 0.1);
-        }
-        select {
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-            background: white;
-        }
-        select:focus {
-            outline: none;
-            border-color: #6b5fb3;
-            box-shadow: 0 0 0 3px rgba(107, 95, 179, 0.1);
-        }
-        button {
-            padding: 10px 16px;
-            background: linear-gradient(135deg, #6b5fb3 0%, #534ab7 100%);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: transform 0.1s, box-shadow 0.1s;
-        }
-        button:hover {
-            box-shadow: 0 4px 12px rgba(83, 74, 183, 0.3);
-        }
-        button:active {
-            transform: scale(0.98);
-        }
-        .task-list {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .task-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: #f9f7fc;
-            border: 1px solid #e8dff5;
-            border-radius: 8px;
-            cursor: grab;
-            transition: background 0.2s, box-shadow 0.2s;
-        }
-        .task-item:hover {
-            background: #f3eff9;
-            box-shadow: 0 2px 8px rgba(83, 74, 183, 0.08);
-        }
-        .task-item.dragging {
-            opacity: 0.5;
-            background: #e8dff5;
-        }
-        .task-item.completed {
-            opacity: 0.6;
-            background: #f0f0f0;
-        }
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            accent-color: #6b5fb3;
-            flex-shrink: 0;
-        }
-        .task-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            min-width: 0;
-        }
-        .task-title {
-            font-size: 14px;
-            color: #333;
-            word-break: break-word;
-        }
-        .task-item.completed .task-title {
-            text-decoration: line-through;
-            color: #999;
-        }
-        .task-level {
-            font-size: 12px;
-            color: #888;
-        }
-        .task-controls {
-            display: flex;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-        .task-controls button {
-            padding: 6px 10px;
-            font-size: 12px;
-            background: #e8dff5;
-            color: #534ab7;
-            border: none;
-        }
-        .task-controls button:hover {
-            background: #dccfe8;
-        }
-        .task-controls .delete-btn {
-            background: #fce8e8;
-            color: #c23e3e;
-        }
-        .task-controls .delete-btn:hover {
-            background: #f5d5d5;
-        }
-        .celebration {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            animation: celebrateIn 0.4s ease-out;
-        }
-        @keyframes celebrateIn {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-        .celebration.exit {
-            animation: celebrateOut 0.4s ease-in forwards;
-        }
-        @keyframes celebrateOut {
-            to {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.8);
-            }
-        }
-        .celebration h2 {
-            font-size: 28px;
-            margin: 10px 0;
-            color: #534ab7;
-        }
-        .celebration-emoji {
-            font-size: 60px;
-            margin: 20px 0;
-            animation: bounce 0.6s ease-in-out;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-        .empty-state {
-            padding: 40px 20px;
-            text-align: center;
-            color: #999;
-        }
-        .empty-state p {
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bug Collection</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Kalam', cursive;
+    background: #ffffff;
+    color: #1a1a1a;
+    min-height: 100vh;
+    padding: 16px;
+}
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #fff;
+    border: 3px solid #1a1a1a;
+    border-radius: 4px;
+}
+.header {
+    padding: 20px 16px 16px;
+    text-align: center;
+    border-bottom: 3px solid #1a1a1a;
+}
+.title-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.title-row h1 {
+    font-family: 'Caveat', cursive;
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    line-height: 1;
+}
+.title-bug { width: 34px; height: 34px; flex-shrink: 0; }
+.tagline {
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    margin-top: 6px;
+    color: #555;
+}
+.section {
+    padding: 16px;
+    border-bottom: 2px dashed #bbb;
+}
+.section-label {
+    font-family: 'Caveat', cursive;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+/* Bug jar */
+.jar-wrap { display: flex; justify-content: center; }
+.jar {
+    position: relative;
+    width: 100%;
+    max-width: 340px;
+}
+.jar svg { width: 100%; display: block; }
+.jar-contents {
+    position: absolute;
+    top: 24%;
+    left: 12%;
+    right: 12%;
+    bottom: 8%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-end;
+    justify-content: center;
+    gap: 2px;
+    overflow: hidden;
+}
+.jar-bug { width: 26px; height: 26px; }
+.jar-empty {
+    font-family: 'Caveat', cursive;
+    font-size: 20px;
+    color: #999;
+    align-self: center;
+    text-align: center;
+    width: 100%;
+}
+.leftover-flies {
+    text-align: center;
+    font-family: 'Caveat', cursive;
+    font-size: 20px;
+    margin-top: 10px;
+}
+.leftover-flies .fly-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+/* Collection grid */
+.collection {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+    gap: 8px;
+}
+.spec {
+    border: 2px solid #1a1a1a;
+    border-radius: 3px;
+    padding: 6px 4px 4px;
+    text-align: center;
+    background: #fff;
+    position: relative;
+}
+.spec.locked { opacity: 0.28; }
+.spec svg { width: 40px; height: 40px; }
+.spec .spec-name {
+    font-family: 'Caveat', cursive;
+    font-size: 13px;
+    line-height: 1.05;
+    margin-top: 2px;
+}
+.spec .spec-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #1a1a1a;
+    color: #fff;
+    font-family: 'Kalam', cursive;
+    font-size: 12px;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+}
+/* Progress */
+.progress-label {
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+.progress-label .next-bug { display: flex; align-items: center; gap: 6px; }
+.progress-label .next-bug svg { width: 24px; height: 24px; }
+.progress-bar {
+    width: 100%;
+    height: 14px;
+    border: 2px solid #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
+    background: repeating-linear-gradient(45deg,#fff,#fff 4px,#eee 4px,#eee 8px);
+}
+.progress-fill {
+    height: 100%;
+    background: #1a1a1a;
+    transition: width 0.4s ease;
+}
+/* Weekly total */
+.weekly-total {
+    text-align: center;
+    font-family: 'Caveat', cursive;
+    font-size: 24px;
+    padding: 4px;
+}
+.weekly-total strong { font-size: 30px; }
+/* Input */
+.input-section {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+input[type="text"] {
+    flex: 1;
+    min-width: 140px;
+    padding: 10px 12px;
+    border: 2px solid #1a1a1a;
+    border-radius: 3px;
+    font-family: 'Kalam', cursive;
+    font-size: 15px;
+    background: #fff;
+}
+input[type="number"] {
+    width: 64px;
+    padding: 10px 6px;
+    border: 2px solid #1a1a1a;
+    border-radius: 3px;
+    font-family: 'Kalam', cursive;
+    font-size: 15px;
+    text-align: center;
+    background: #fff;
+}
+input:focus { outline: none; box-shadow: 3px 3px 0 #1a1a1a; }
+.fly-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+}
+.fly-label svg { width: 22px; height: 22px; }
+button {
+    padding: 10px 16px;
+    background: #1a1a1a;
+    color: #fff;
+    border: 2px solid #1a1a1a;
+    border-radius: 3px;
+    font-family: 'Kalam', cursive;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+button:active { transform: translate(2px,2px); }
+/* Task list */
+.task-list { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 2px solid #1a1a1a;
+    border-radius: 3px;
+    background: #fff;
+    cursor: grab;
+}
+.task-item.dragging { opacity: 0.4; }
+.task-item.completed { background: #f2f2f2; }
+input[type="checkbox"] {
+    width: 22px; height: 22px; cursor: pointer; flex-shrink: 0;
+    accent-color: #1a1a1a;
+}
+.task-content { flex: 1; min-width: 0; }
+.task-title { font-size: 16px; word-break: break-word; }
+.task-item.completed .task-title { text-decoration: line-through; color: #888; }
+.task-worth {
+    font-family: 'Caveat', cursive;
+    font-size: 16px; color: #555;
+    display: flex; align-items: center; gap: 4px;
+}
+.task-worth svg { width: 18px; height: 18px; }
+.delete-btn {
+    background: #fff; color: #1a1a1a; padding: 6px 10px; font-size: 13px; flex-shrink: 0;
+}
+.empty-state {
+    text-align: center; padding: 24px; font-family: 'Caveat', cursive; font-size: 20px; color: #999;
+}
+/* Daily tracker */
+.day-log { display: flex; flex-direction: column; gap: 10px; }
+.day-entry { border: 2px solid #1a1a1a; border-radius: 3px; padding: 8px 12px; }
+.day-entry.today { border-width: 3px; background: #fafafa; }
+.day-date { font-family: 'Caveat', cursive; font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.day-catch { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.catch-item { display: flex; align-items: center; gap: 3px; font-family: 'Caveat', cursive; font-size: 16px; }
+.catch-item svg { width: 22px; height: 22px; }
+.day-empty { font-family: 'Caveat', cursive; font-size: 16px; color: #999; }
+/* Celebration */
+.celebration-overlay {
+    position: fixed; inset: 0; background: rgba(255,255,255,0.9);
+    display: flex; align-items: center; justify-content: center; z-index: 1000;
+    animation: fadeIn 0.3s;
+}
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+.celebration-card {
+    border: 3px solid #1a1a1a; border-radius: 4px; background: #fff;
+    padding: 28px 32px; text-align: center; max-width: 340px;
+    box-shadow: 8px 8px 0 #1a1a1a;
+    animation: pop 0.4s ease-out;
+}
+@keyframes pop { from{transform:scale(0.7) rotate(-4deg);} to{transform:scale(1) rotate(0);} }
+.celebration-card svg { width: 90px; height: 90px; animation: wiggle 0.6s ease-in-out; }
+@keyframes wiggle { 0%,100%{transform:rotate(0);} 25%{transform:rotate(-8deg);} 75%{transform:rotate(8deg);} }
+.celebration-card h2 { font-family: 'Caveat', cursive; font-size: 30px; margin: 8px 0 4px; }
+.celebration-card .cap { font-family: 'Caveat', cursive; font-size: 18px; color: #444; }
+.celebration-card .fact { font-family: 'Kalam', cursive; font-size: 14px; margin-top: 12px; border-top: 2px dashed #bbb; padding-top: 10px; }
+.celebration-card button { margin-top: 16px; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Get'n Shit Done</h1>
-            <div class="reward-key" id="rewardKey"></div>
-        </div>
-
-        <div class="rewards-display">
-            <div class="rewards-label">Your Earned Rewards</div>
-            <div class="rewards-earned" id="rewardsEarned">No rewards yet!</div>
-        </div>
-
-        <div class="progress-section" id="progressSection"></div>
-
-        <div class="input-section">
-            <input type="text" id="taskInput" placeholder="What needs doing?" />
-            <select id="levelSelect"></select>
-            <button onclick="addTask()">Add</button>
-        </div>
-
-        <div class="task-list" id="taskList"></div>
-        <div id="celebration"></div>
+<div class="container">
+    <div class="header">
+        <div class="title-row" id="titleRow"></div>
     </div>
 
-    <script>
-        const REWARD_LEVELS = [
-            { emoji: '⭐', name: 'Star', stars: 1 },
-            { emoji: '🌸', name: 'Flower', stars: 10 },
-            { emoji: '🐢', name: 'Turtle', stars: 25 },
-            { emoji: '🐰', name: 'Bunny', stars: 50 },
-            { emoji: '🐉', name: 'Dragon', stars: 125 },
-            { emoji: '🏰', name: 'Castle', stars: 250 },
-            { emoji: '🦛', name: 'Baby Hippo', stars: 1000 },
-            { emoji: '🪐', name: 'Planet', stars: 500 },
-            { emoji: '🐵', name: 'Monkey', stars: 2000 }
-        ];
+    <div class="section">
+        <div class="section-label" id="jarLabel">Your Bug Jar</div>
+        <div class="jar-wrap"><div class="jar" id="jarBox"></div></div>
+        <div class="leftover-flies" id="leftoverFlies"></div>
+    </div>
 
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        let totalStars = parseInt(localStorage.getItem('totalStars')) || 0;
-        let draggedIndex = null;
+    <div class="section">
+        <div class="progress-label" id="progressLabel"></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
 
-        function saveTasks() {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
+    <div class="section">
+        <div class="weekly-total" id="weeklyTotal"></div>
+    </div>
+
+    <div class="section">
+        <div class="input-section">
+            <input type="text" id="taskInput" placeholder="What needs doing?" />
+            <span class="fly-label" id="flyLabelIcon"></span>
+            <input type="number" id="flyInput" min="1" value="1" />
+            <button onclick="addTask()">Add</button>
+        </div>
+        <div class="task-list" id="taskList"></div>
+    </div>
+
+    <div class="section">
+        <div class="section-label">Collection</div>
+        <div class="collection" id="collection"></div>
+    </div>
+
+    <div class="section" style="border-bottom:none;">
+        <div class="section-label">This Week's Catch</div>
+        <div class="day-log" id="dayLog"></div>
+    </div>
+</div>
+<div id="celebration"></div>
+
+<script>
+// ---------- Bug SVG drawings (black & white, hand-sketch style) ----------
+const S = 'stroke="#1a1a1a" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"';
+const SF = 'stroke="#1a1a1a" fill="#1a1a1a" stroke-width="2"';
+function svg(inner){ return '<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg>'; }
+
+const BUGS = [
+{ name:'Fruit Fly', worth:1, fact:"Fruit flies can go from egg to adult in about a week.",
+  svg: svg('<ellipse cx="30" cy="34" rx="8" ry="11" '+S+'/><circle cx="30" cy="20" r="5" '+S+'/><path d="M28 20 l-3 -3 M32 20 l3 -3" '+S+'/><path d="M24 28 q-14 -6 -18 2" '+S+'/><path d="M36 28 q14 -6 18 2" '+S+'/><path d="M25 34 l-9 3 M25 40 l-9 4 M35 34 l9 3 M35 40 l9 4" '+S+'/>') },
+{ name:'Tiger Mosquito', worth:4, fact:"Only female mosquitoes bite \u2014 they need blood to make eggs.",
+  svg: svg('<ellipse cx="32" cy="34" rx="6" ry="12" '+S+'/><circle cx="32" cy="18" r="4" '+S+'/><path d="M32 14 l-4 -6 M32 14 l4 -6" '+S+'/><path d="M27 26 q-16 -8 -20 -2" '+S+'/><path d="M37 26 q16 -8 20 -2" '+S+'/><path d="M28 30 l-14 8 M28 36 l-14 10 M28 42 l-12 8 M36 30 l14 8 M36 36 l14 10 M36 42 l12 8" '+S+'/>') },
+{ name:'Ladybug', worth:10, fact:"A ladybug can eat 5,000 aphids in its lifetime.",
+  svg: svg('<circle cx="30" cy="34" r="16" '+S+'/><path d="M30 18 v32" '+S+'/><circle cx="30" cy="14" r="5" '+SF+'/><circle cx="23" cy="30" r="2.4" '+SF+'/><circle cx="37" cy="30" r="2.4" '+SF+'/><circle cx="23" cy="40" r="2.4" '+SF+'/><circle cx="37" cy="40" r="2.4" '+SF+'/><path d="M27 10 l-3 -3 M33 10 l3 -3" '+S+'/>') },
+{ name:'Honeybee', worth:20, fact:"A honeybee visits up to 100 flowers on one trip.",
+  svg: svg('<ellipse cx="30" cy="34" rx="12" ry="15" '+S+'/><path d="M19 30 h22 M19 38 h22" '+S+'/><circle cx="30" cy="15" r="5" '+S+'/><path d="M27 11 l-3 -4 M33 11 l3 -4" '+S+'/><path d="M22 26 q-14 -10 -16 -2 q-2 8 12 6" '+S+'/><path d="M38 26 q14 -10 16 -2 q2 8 -12 6" '+S+'/>') },
+{ name:'Jumping Spider', worth:35, fact:"Jumping spiders can leap 50 times their body length.",
+  svg: svg('<circle cx="30" cy="34" r="11" '+S+'/><circle cx="30" cy="20" r="8" '+S+'/><circle cx="27" cy="18" r="2.2" '+SF+'/><circle cx="33" cy="18" r="2.2" '+SF+'/><path d="M21 30 l-12 -6 M21 34 l-14 0 M21 38 l-12 8 M21 41 l-10 12" '+S+'/><path d="M39 30 l12 -6 M39 34 l14 0 M39 38 l12 8 M39 41 l10 12" '+S+'/>') },
+{ name:'Field Cricket', worth:55, fact:"Crickets 'sing' by rubbing their wings together.",
+  svg: svg('<ellipse cx="30" cy="34" rx="9" ry="15" '+S+'/><circle cx="30" cy="17" r="5" '+S+'/><path d="M30 12 q-8 -12 -14 -8 M30 12 q8 -12 14 -8" '+S+'/><path d="M22 30 q-10 4 -12 14" '+S+'/><path d="M38 30 q10 4 12 14" '+S+'/><path d="M32 40 q14 6 16 20" '+S+'stroke-width="3"/><path d="M28 40 q-14 6 -16 20" '+S+'stroke-width="3"/>') },
+{ name:'Woolly Bear Caterpillar', worth:80, fact:"Woolly bears survive winter by nearly freezing solid.",
+  svg: svg('<path d="M8 36 q6 -10 12 0 q6 10 12 0 q6 -10 12 0 q6 10 8 0" '+S+'/><path d="M8 36 q6 10 12 0 M20 36 q6 -10 12 0 M32 36 q6 10 12 0" '+S+'/><g stroke="#1a1a1a" stroke-width="2"><path d="M10 30 v-6 M16 26 v-6 M22 30 v-6 M28 26 v-6 M34 30 v-6 M40 26 v-6 M46 30 v-6"/><path d="M10 42 v6 M16 46 v6 M22 42 v6 M28 46 v6 M34 42 v6 M40 46 v6"/></g>') },
+{ name:'Monarch Butterfly', worth:110, fact:"Monarchs migrate up to 3,000 miles each year.",
+  svg: svg('<path d="M30 22 v20" '+S+'stroke-width="3"/><path d="M30 22 l-4 -6 M30 22 l4 -6" '+S+'/><path d="M29 24 q-22 -16 -22 4 q0 12 22 6 Z" '+S+'/><path d="M31 24 q22 -16 22 4 q0 12 -22 6 Z" '+S+'/><path d="M29 32 q-16 -8 -20 2 q0 10 20 4 Z" '+S+'/><path d="M31 32 q16 -8 20 2 q0 10 -20 4 Z" '+S+'/><circle cx="16" cy="24" r="2" '+SF+'/><circle cx="44" cy="24" r="2" '+SF+'/>') },
+{ name:'Periodical Cicada', worth:145, fact:"Some cicadas stay underground for 17 years before emerging.",
+  svg: svg('<ellipse cx="30" cy="36" rx="8" ry="16" '+S+'/><path d="M30 22 q-6 -6 -10 -4 M30 22 q6 -6 10 -4" '+S+'/><circle cx="26" cy="24" r="2.2" '+SF+'/><circle cx="34" cy="24" r="2.2" '+SF+'/><path d="M25 30 q-18 2 -16 22 q10 4 16 -8 Z" '+S+'/><path d="M35 30 q18 2 16 22 q-10 4 -16 -8 Z" '+S+'/><path d="M30 30 h0 M30 38 h0 M30 46 h0" '+S+'/><path d="M26 32 h8 M26 40 h8" '+S+'/>') },
+{ name:'Rhinoceros Beetle', worth:185, fact:"Rhino beetles can lift 850 times their own body weight.",
+  svg: svg('<ellipse cx="30" cy="38" rx="13" ry="16" '+S+'/><path d="M30 22 v-8 q0 -6 -5 -8 M30 22 q0 -6 5 -8" '+S+'stroke-width="3"/><path d="M30 22 v22" '+S+'/><path d="M18 30 l-10 -4 M18 40 l-10 2 M18 48 l-8 6 M42 30 l10 -4 M42 40 l10 2 M42 48 l8 6" '+S+'/>') },
+{ name:'Emperor Scorpion', worth:230, fact:"Scorpions glow bright blue-green under ultraviolet light.",
+  svg: svg('<ellipse cx="30" cy="34" rx="7" ry="12" '+S+'/><path d="M30 22 q-8 -6 -14 -2 M30 22 q8 -6 14 -2" '+S+'/><path d="M16 20 q-6 -2 -8 -8 q6 -2 10 4 Z" '+S+'/><path d="M44 20 q6 -2 8 -8 q-6 -2 -10 4 Z" '+S+'/><path d="M30 46 q-2 8 2 12 q6 2 8 -4 q4 -6 -2 -8" '+S+'/><path d="M23 34 l-10 4 M23 40 l-10 8 M37 34 l10 4 M37 40 l10 8" '+S+'/>') },
+{ name:'Tarantula Hawk Wasp', worth:285, fact:"This wasp has one of the most painful stings on Earth.",
+  svg: svg('<ellipse cx="30" cy="40" rx="7" ry="12" '+S+'/><circle cx="30" cy="24" r="5" '+S+'/><path d="M30 30 v4" '+S+'/><circle cx="30" cy="15" r="4" '+S+'/><path d="M28 12 l-3 -4 M32 12 l3 -4" '+S+'/><path d="M25 34 q-18 -6 -20 6 q10 6 20 -2 Z" '+S+'/><path d="M35 34 q18 -6 20 6 q-10 6 -20 -2 Z" '+S+'/><path d="M30 52 l0 6" '+S+'/><path d="M24 42 l-8 6 M36 42 l8 6" '+S+'/>') },
+{ name:'Vinegaroon', worth:350, fact:"Vinegaroons spray a vinegar-smelling acid to defend themselves.",
+  svg: svg('<ellipse cx="30" cy="36" rx="9" ry="14" '+S+'/><circle cx="30" cy="20" r="4" '+S+'/><path d="M30 24 v6" '+S+'/><path d="M26 18 q-12 -4 -16 4 q8 6 16 0" '+S+'/><path d="M34 18 q12 -4 16 4 q-8 6 -16 0" '+S+'/><path d="M30 50 q0 8 0 10" '+S+'stroke-width="1.6"/><path d="M23 32 l-12 2 M23 38 l-12 8 M37 32 l12 2 M37 38 l12 8" '+S+'/>') },
+{ name:'Hissing Cockroach', worth:425, fact:"They hiss by pushing air through breathing holes in their body.",
+  svg: svg('<ellipse cx="30" cy="34" rx="15" ry="18" '+S+'/><path d="M22 20 q-10 -12 -14 -10 M38 20 q10 -12 14 -10" '+S+'/><path d="M30 16 v36" '+S+'/><path d="M15 30 l-8 -2 M15 40 l-8 6 M45 30 l8 -2 M45 40 l8 6" '+S+'/>') },
+{ name:'Goliath Birdeater', worth:510, fact:"The largest spider on Earth \u2014 its legs can span a dinner plate.",
+  svg: svg('<circle cx="30" cy="36" r="10" '+S+'/><circle cx="30" cy="22" r="7" '+S+'/><g '+S+'><path d="M22 30 q-16 -8 -18 -18 M22 34 q-18 -2 -22 -6 M22 40 q-16 6 -18 16 M22 44 q-12 10 -12 20"/><path d="M38 30 q16 -8 18 -18 M38 34 q18 -2 22 -6 M38 40 q16 6 18 16 M38 44 q12 10 12 20"/></g>') },
+{ name:'Atlas Moth', worth:610, fact:"One of the biggest moths \u2014 wings can span nearly a foot.",
+  svg: svg('<path d="M30 18 v26" '+S+'stroke-width="3"/><path d="M30 18 q-6 -8 -12 -6 M30 18 q6 -8 12 -6" '+S+'/><path d="M28 22 q-24 -14 -24 6 q0 10 14 8 q-6 8 10 6 Z" '+S+'/><path d="M32 22 q24 -14 24 6 q0 10 -14 8 q6 8 -10 6 Z" '+S+'/><path d="M8 26 q4 4 10 2 M52 26 q-4 4 -10 2" '+S+'/>') },
+{ name:'Titan Beetle', worth:725, fact:"The titan beetle's jaws can snap a wooden pencil in half.",
+  svg: svg('<ellipse cx="30" cy="38" rx="15" ry="17" '+S+'/><circle cx="30" cy="19" r="6" '+S+'/><path d="M27 14 q-8 -8 -14 -4 M33 14 q8 -8 14 -4" '+S+'stroke-width="2.6"/><path d="M30 24 v22" '+S+'/><path d="M15 32 l-9 -4 M15 42 l-9 2 M15 50 l-7 6 M45 32 l9 -4 M45 42 l9 2 M45 50 l7 6" '+S+'/>') }
+];
+
+const TITLE_BUGS = [0,2,3,5,7,8,10,12,16]; // which bugs flank the title
+
+// ---------- State ----------
+let tasks = JSON.parse(localStorage.getItem('bug_tasks') || '[]');
+let totalFlies = parseInt(localStorage.getItem('bug_totalFlies') || '0');
+let dailyLog = JSON.parse(localStorage.getItem('bug_dailyLog') || '{}'); // { 'YYYY-MM-DD': flies }
+let draggedIndex = null;
+
+function save(){
+    localStorage.setItem('bug_tasks', JSON.stringify(tasks));
+    localStorage.setItem('bug_totalFlies', String(totalFlies));
+    localStorage.setItem('bug_dailyLog', JSON.stringify(dailyLog));
+}
+function todayKey(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+// break a fly count into bug specimens, largest first, with leftover flies
+function breakdown(flies){
+    let rem = flies; const counts = {};
+    for(let i=BUGS.length-1; i>=1; i--){
+        const c = Math.floor(rem / BUGS[i].worth);
+        if(c>0){ counts[i]=c; rem -= c*BUGS[i].worth; }
+    }
+    return { counts, leftover: rem };
+}
+
+// ---------- Rendering ----------
+function renderTitle(){
+    const row = document.getElementById('titleRow');
+    const half = Math.ceil(TITLE_BUGS.length/2);
+    let left = TITLE_BUGS.slice(0,half).map(i=>'<span class="title-bug">'+BUGS[i].svg+'</span>').join('');
+    let right = TITLE_BUGS.slice(half).map(i=>'<span class="title-bug">'+BUGS[i].svg+'</span>').join('');
+    row.innerHTML = left + '<h1>Bug Collection</h1>' + right;
+    document.getElementById('flyLabelIcon').innerHTML = BUGS[0].svg;
+    document.getElementById('jarLabel').innerHTML = 'Your Bug Jar <span class="title-bug" style="width:24px;height:24px;">'+BUGS[0].svg+'</span>';
+}
+
+function jarSVG(){
+    return '<svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">'
+    +'<path d="M70 30 h60 v10 h8 v10 h-84 v-10 h8 z" '+S+'/>'
+    +'<path d="M50 55 q0 -5 5 -5 h90 q5 0 5 5 v120 q0 30 -30 30 h-40 q-30 0 -30 -30 z" '+S+'/>'
+    +'<path d="M60 60 h80" stroke="#1a1a1a" fill="none" stroke-width="1.5" stroke-dasharray="4 4"/>'
+    +'</svg>';
+}
+
+function renderJar(){
+    const box = document.getElementById('jarBox');
+    const { counts, leftover } = breakdown(totalFlies);
+    let bugsHtml = '';
+    const keys = Object.keys(counts).map(Number).sort((a,b)=>a-b);
+    let total=0;
+    keys.forEach(i=>{ for(let n=0;n<counts[i] && total<60;n++){ bugsHtml+='<span class="jar-bug">'+BUGS[i].svg+'</span>'; total++; } });
+    // also show leftover flies as little flies in the jar
+    for(let n=0;n<leftover && total<60;n++){ bugsHtml+='<span class="jar-bug">'+BUGS[0].svg+'</span>'; total++; }
+    if(total===0) bugsHtml = '<div class="jar-empty">Empty jar!<br>Catch some bugs \u2193</div>';
+    box.innerHTML = jarSVG() + '<div class="jar-contents">'+bugsHtml+'</div>';
+
+    const lf = document.getElementById('leftoverFlies');
+    if(totalFlies>0){
+        lf.innerHTML = 'Total caught: <span class="fly-count">'+totalFlies+' <span class="title-bug" style="width:20px;height:20px;">'+BUGS[0].svg+'</span></span>'
+        + (leftover>0 ? '  \u00b7  '+leftover+' loose fruit fl'+(leftover===1?'y':'ies') : '');
+    } else { lf.innerHTML=''; }
+}
+
+function nextBugInfo(){
+    for(let i=1;i<BUGS.length;i++){
+        if(totalFlies < BUGS[i].worth){
+            const prev = BUGS[i-1].worth;
+            const span = BUGS[i].worth - 0;
+            return { bug:BUGS[i], needed:BUGS[i].worth-totalFlies, pct: Math.min(100,(totalFlies/BUGS[i].worth)*100) };
         }
+    }
+    return null;
+}
+function renderProgress(){
+    const info = nextBugInfo();
+    const label = document.getElementById('progressLabel');
+    const fill = document.getElementById('progressFill');
+    if(info){
+        label.innerHTML = '<span class="next-bug">Next: '+info.bug.svg+' '+info.bug.name+'</span><span>'+info.needed+' to go</span>';
+        fill.style.width = info.pct+'%';
+    } else {
+        label.innerHTML = '<span class="next-bug">'+BUGS[BUGS.length-1].svg+' Max bug reached!</span><span>\u2728</span>';
+        fill.style.width='100%';
+    }
+}
 
-        function saveStars() {
-            localStorage.setItem('totalStars', totalStars.toString());
+function last7keys(){
+    const arr=[]; const d=new Date();
+    for(let i=0;i<7;i++){ const x=new Date(d); x.setDate(d.getDate()-i);
+        arr.push(x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')); }
+    return arr;
+}
+function renderWeekly(){
+    const keys = last7keys();
+    let sum=0; keys.forEach(k=> sum += (dailyLog[k]||0));
+    document.getElementById('weeklyTotal').innerHTML = 'This week you caught <strong>'+sum+'</strong> fruit fl'+(sum===1?'y':'ies')+'!';
+}
+
+function fmtDate(key){
+    const [y,m,d]=key.split('-').map(Number);
+    const dt=new Date(y,m-1,d);
+    const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return days[dt.getDay()]+', '+mons[m-1]+' '+d;
+}
+function renderDayLog(){
+    const log = document.getElementById('dayLog');
+    const keys = last7keys();
+    const tKey = todayKey();
+    let html='';
+    keys.forEach(k=>{
+        const flies = dailyLog[k]||0;
+        const isToday = k===tKey;
+        let catchHtml='';
+        if(flies>0){
+            const {counts,leftover}=breakdown(flies);
+            const ordered=Object.keys(counts).map(Number).sort((a,b)=>b-a);
+            ordered.forEach(i=>{ catchHtml+='<span class="catch-item">'+BUGS[i].svg+' \u00d7'+counts[i]+'</span>'; });
+            if(leftover>0) catchHtml+='<span class="catch-item">'+BUGS[0].svg+' \u00d7'+leftover+'</span>';
+            catchHtml+='<span class="catch-item">('+flies+' total)</span>';
+        } else {
+            catchHtml='<span class="day-empty">'+(isToday?'Nothing yet today \u2014 go catch some!':'\u2014')+'</span>';
         }
+        html+='<div class="day-entry'+(isToday?' today':'')+'"><div class="day-date">'+(isToday?'Today \u00b7 ':'')+fmtDate(k)+'</div><div class="day-catch">'+catchHtml+'</div></div>';
+    });
+    log.innerHTML=html;
+}
 
-        function initializeLevelSelect() {
-            const select = document.getElementById('levelSelect');
-            REWARD_LEVELS.forEach((level, idx) => {
-                const option = document.createElement('option');
-                option.value = idx;
-                option.textContent = level.emoji + ' ' + level.name;
-                select.appendChild(option);
-            });
-        }
+function renderCollection(){
+    const col=document.getElementById('collection');
+    const {counts}=breakdown(totalFlies);
+    // "ever earned" = highest tier reached historically via totalFlies; show a bug as unlocked if totalFlies>=worth
+    let html='';
+    BUGS.forEach((b,i)=>{
+        const unlocked = totalFlies>=b.worth;
+        const owned = counts[i]||0;
+        html+='<div class="spec'+(unlocked?'':' locked')+'">'
+            + (owned>0?'<span class="spec-count">'+owned+'</span>':'')
+            + b.svg + '<div class="spec-name">'+b.name+'</div></div>';
+    });
+    col.innerHTML=html;
+}
 
-        function initializeRewardKey() {
-            const key = document.getElementById('rewardKey');
-            REWARD_LEVELS.forEach(level => {
-                const item = document.createElement('div');
-                item.className = 'reward-key-item';
-                item.textContent = level.emoji + ' ' + level.stars;
-                key.appendChild(item);
-            });
-        }
+function renderTasks(){
+    const list=document.getElementById('taskList');
+    if(tasks.length===0){ list.innerHTML='<div class="empty-state">No tasks yet \u2014 add one above! \u2191</div>'; return; }
+    list.innerHTML = tasks.map((t,idx)=>{
+        return '<div class="task-item'+(draggedIndex===idx?' dragging':'')+(t.completed?' completed':'')+'" draggable="true" '
+        +'ondragstart="dragStart('+idx+')" ondragover="dragOver(event)" ondrop="drop('+idx+')" ondragend="dragEnd()">'
+        +'<input type="checkbox" '+(t.completed?'checked':'')+' onchange="toggleTask('+t.id+')">'
+        +'<div class="task-content"><div class="task-title">'+escapeHtml(t.title)+'</div>'
+        +'<div class="task-worth">worth '+t.flies+' '+BUGS[0].svg+' fruit fl'+(t.flies===1?'y':'ies')+'</div></div>'
+        +'<button class="delete-btn" onclick="deleteTask('+t.id+')">Delete</button></div>';
+    }).join('');
+}
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-        function addTask() {
-            const input = document.getElementById('taskInput');
-            const select = document.getElementById('levelSelect');
-            
-            if (input.value.trim()) {
-                tasks.unshift({
-                    id: Date.now(),
-                    title: input.value.trim(),
-                    level: parseInt(select.value),
-                    completed: false
-                });
-                input.value = '';
-                select.value = 0;
-                saveTasks();
-                render();
-                input.focus();
-            }
-        }
+function renderAll(){ renderJar(); renderProgress(); renderWeekly(); renderDayLog(); renderCollection(); renderTasks(); }
 
-        function completeTask(id) {
-            const task = tasks.find(t => t.id === id);
-            if (!task.completed) {
-                const stars = REWARD_LEVELS[task.level].stars;
-                const oldTotal = totalStars;
-                totalStars += stars;
-                saveStars();
-                checkForNewRewards(oldTotal, totalStars);
-            }
-            task.completed = !task.completed;
-            saveTasks();
-            render();
-        }
+// ---------- Actions ----------
+function addTask(){
+    const input=document.getElementById('taskInput');
+    const flyIn=document.getElementById('flyInput');
+    const title=input.value.trim();
+    let flies=parseInt(flyIn.value); if(isNaN(flies)||flies<1) flies=1;
+    if(title){
+        tasks.unshift({ id:Date.now(), title, flies, completed:false });
+        input.value=''; flyIn.value='1'; save(); renderTasks(); input.focus();
+    }
+}
+function toggleTask(id){
+    const t=tasks.find(x=>x.id===id); if(!t) return;
+    if(!t.completed){
+        const before=totalFlies;
+        totalFlies+=t.flies;
+        const k=todayKey(); dailyLog[k]=(dailyLog[k]||0)+t.flies;
+        checkCelebrate(before,totalFlies);
+    }
+    // Note: unchecking does not remove flies already banked (kept simple & positive)
+    t.completed=!t.completed; save(); renderAll();
+}
+function deleteTask(id){ tasks=tasks.filter(x=>x.id!==id); save(); renderTasks(); }
 
-        function deleteTask(id) {
-            tasks = tasks.filter(t => t.id !== id);
-            saveTasks();
-            render();
-        }
+function checkCelebrate(before,after){
+    for(let i=BUGS.length-1;i>=1;i--){
+        if(before<BUGS[i].worth && after>=BUGS[i].worth){ celebrate(BUGS[i]); break; }
+    }
+}
+function celebrate(bug){
+    const el=document.getElementById('celebration');
+    el.innerHTML='<div class="celebration-overlay" onclick="closeCelebrate()">'
+    +'<div class="celebration-card" onclick="event.stopPropagation()">'
+    +bug.svg+'<h2>New bug!</h2><div class="cap">You caught a '+bug.name+'!</div>'
+    +'<div class="fact">'+bug.fact+'</div>'
+    +'<button onclick="closeCelebrate()">Nice!</button></div></div>';
+}
+function closeCelebrate(){ document.getElementById('celebration').innerHTML=''; }
 
-        function checkForNewRewards(oldTotal, newTotal) {
-            for (let i = REWARD_LEVELS.length - 1; i >= 0; i--) {
-                const threshold = REWARD_LEVELS[i].stars;
-                if (oldTotal < threshold && newTotal >= threshold) {
-                    showCelebration(REWARD_LEVELS[i]);
-                    break;
-                }
-            }
-        }
+function dragStart(i){ draggedIndex=i; }
+function dragOver(e){ e.preventDefault(); }
+function drop(i){ if(draggedIndex!==null&&draggedIndex!==i){ const t=tasks[draggedIndex]; tasks.splice(draggedIndex,1); tasks.splice(i,0,t); save(); } draggedIndex=null; renderTasks(); }
+function dragEnd(){ draggedIndex=null; renderTasks(); }
 
-        function showCelebration(level) {
-            const celebDiv = document.getElementById('celebration');
-            celebDiv.innerHTML = '<div class="celebration"><div class="celebration-emoji">' + level.emoji + '</div><h2>You unlocked ' + level.name + '!</h2><p>' + level.stars + ' ⭐ earned!</p></div>';
-            setTimeout(() => {
-                celebDiv.innerHTML = '';
-            }, 2000);
-        }
+document.getElementById('taskInput').addEventListener('keypress',e=>{ if(e.key==='Enter'){ document.getElementById('flyInput').focus(); }});
+document.getElementById('flyInput').addEventListener('keypress',e=>{ if(e.key==='Enter'){ addTask(); }});
 
-        function getRewardsDisplay() {
-            let remaining = totalStars;
-            const rewards = [];
-            
-            for (let i = REWARD_LEVELS.length - 1; i >= 0; i--) {
-                const count = Math.floor(remaining / REWARD_LEVELS[i].stars);
-                if (count > 0) {
-                    for (let j = 0; j < count; j++) {
-                        rewards.push(REWARD_LEVELS[i].emoji);
-                    }
-                    remaining -= count * REWARD_LEVELS[i].stars;
-                }
-            }
-
-            if (remaining > 0) {
-                rewards.push('⭐' + remaining);
-            }
-
-            return rewards.length > 0 ? rewards.join(' ') : 'No rewards yet!';
-        }
-
-        function getNextRewardInfo() {
-            for (let i = 0; i < REWARD_LEVELS.length; i++) {
-                if (totalStars < REWARD_LEVELS[i].stars) {
-                    const needed = REWARD_LEVELS[i].stars - totalStars;
-                    return {
-                        emoji: REWARD_LEVELS[i].emoji,
-                        name: REWARD_LEVELS[i].name,
-                        needed: needed,
-                        total: REWARD_LEVELS[i].stars,
-                        progress: totalStars
-                    };
-                }
-            }
-            return null;
-        }
-
-        function render() {
-            document.getElementById('rewardsEarned').textContent = getRewardsDisplay();
-
-            const progressSection = document.getElementById('progressSection');
-            const nextReward = getNextRewardInfo();
-            if (nextReward) {
-                const progressPercent = (nextReward.progress / nextReward.total) * 100;
-                progressSection.innerHTML = '<div class="progress-label"><span>Next: ' + nextReward.emoji + ' ' + nextReward.name + '</span><span>' + nextReward.needed + ' more</span></div><div class="progress-bar"><div class="progress-fill" style="width: ' + progressPercent + '%"></div></div>';
-            } else {
-                progressSection.innerHTML = '';
-            }
-
-            const taskList = document.getElementById('taskList');
-            if (tasks.length === 0) {
-                taskList.innerHTML = '<div class="empty-state"><p>✨ No tasks yet!</p><p>Add one above to get started.</p></div>';
-                return;
-            }
-
-            taskList.innerHTML = tasks.map((task, idx) => {
-                return '<div class="task-item ' + (draggedIndex === idx ? 'dragging' : '') + ' ' + (task.completed ? 'completed' : '') + '" draggable="true" ondragstart="dragStart(' + idx + ')" ondragover="dragOver(event)" ondrop="drop(' + idx + ')" ondragend="dragEnd()"><input type="checkbox" ' + (task.completed ? 'checked' : '') + ' onchange="completeTask(' + task.id + ')"><div class="task-content"><div class="task-title">' + task.title + '</div><div class="task-level">' + REWARD_LEVELS[task.level].emoji + ' ' + REWARD_LEVELS[task.level].name + ' (' + REWARD_LEVELS[task.level].stars + ' ⭐)</div></div><div class="task-controls"><button class="delete-btn" onclick="deleteTask(' + task.id + ')">Delete</button></div></div>';
-            }).join('');
-        }
-
-        function dragStart(idx) {
-            draggedIndex = idx;
-        }
-
-        function dragOver(e) {
-            e.preventDefault();
-        }
-
-        function drop(idx) {
-            if (draggedIndex !== null && draggedIndex !== idx) {
-                const draggedTask = tasks[draggedIndex];
-                tasks.splice(draggedIndex, 1);
-                tasks.splice(idx, 0, draggedTask);
-                saveTasks();
-            }
-            draggedIndex = null;
-            render();
-        }
-
-        function dragEnd() {
-            draggedIndex = null;
-            render();
-        }
-
-        document.getElementById('taskInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                addTask();
-            }
-        });
-
-        initializeLevelSelect();
-        initializeRewardKey();
-        render();
-    </script>
+renderTitle();
+renderAll();
+</script>
 </body>
 </html>
